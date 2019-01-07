@@ -2,6 +2,13 @@ import keras as keras
 from keras.models import Model
 import keras.backend as K
 from keras import callbacks
+from keras.layers import Dropout, Flatten, Dense, GlobalAveragePooling2D, Flatten, Conv2D, MaxPooling2D
+from keras.optimizers import Adam, SGD
+from keras.applications import imagenet_utils
+from keras.preprocessing import image
+from keras.utils import to_categorical
+import h5py
+from sklearn.preprocessing import MultiLabelBinarizer
 
 import tensorflow as tf
 from tensorflow.python.lib.io import file_io
@@ -10,18 +17,17 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import pandas as pd
 import argparse
+from urllib.request import urlretrieve
 
 from keras.applications.vgg16 import preprocess_input
 from keras.applications.vgg16 import VGG16
 pre_model = VGG16()
 
-print('Pre-model loaded')
-
 def create_model(pre_model):
     x = pre_model.layers[-2].output
   
     # add output layer
-    predictions = Dense(num_classes, activation='softmax')(x)
+    predictions = Dense(2, activation='softmax')(x)
     
     # initialize Model (functional API)
     model = Model(inputs=pre_model.input, outputs=predictions)
@@ -66,7 +72,7 @@ def main(job_dir,**args):
             y_array.append(label)
             
         except Exception as e: # img not available (e.g. 404)
-            print(e)
+            #print(e)
             continue
 
     y_array_2 = []
@@ -81,7 +87,7 @@ def main(job_dir,**args):
 
     new = []
     for i in y_array_processed:
-    new.append(np.asarray(i))
+        new.append(np.asarray(i))
 
     y_array_processed_np = new
 
