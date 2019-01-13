@@ -9,6 +9,8 @@ setup(name='trainer',
       license='MIT',
       install_requires=[
           'keras',
-          'h5py'
+          'h5py',
+          'Pillow',
+          'interruptingcow'
       ],
       zip_safe=False)
